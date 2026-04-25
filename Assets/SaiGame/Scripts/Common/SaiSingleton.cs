@@ -10,7 +10,14 @@ namespace SaiGame.Services
         {
             get
             {
-                if (_instance == null) Debug.LogError("Singleton instance has not been created yet!");
+                if (_instance == null)
+                {
+                    _instance = Object.FindObjectOfType<T>(true);
+                    if (_instance == null && Application.isPlaying)
+                    {
+                        Debug.LogError("Singleton instance has not been created yet!");
+                    }
+                }
                 return _instance;
             }
         }
