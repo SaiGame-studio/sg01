@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using SaiGame.Services;
 using SaiGame.UI;
@@ -19,12 +20,18 @@ namespace Sg01.UI
         private Button    loginButton;
         private Button    registerButton;
 
+        // Fallback document when Panel Asset is not LoginPanel.uxml.
+        private UIDocument uiDocument;
+
         protected override void LoadComponents()
         {
             base.LoadComponents();
 
             if (this.saiAuth == null)
                 this.saiAuth = this.GetComponentInParent<SaiAuth>();
+
+            if (this.uiDocument == null)
+                this.uiDocument = this.GetComponent<UIDocument>();
         }
 
         protected override void OnBindElements(VisualElement root)
@@ -35,10 +42,26 @@ namespace Sg01.UI
             this.loginButton    = root.Q<Button>("LoginButton");
             this.registerButton = root.Q<Button>("RegisterButton");
 
-            this.loginButton.clicked    += this.OnLoginClicked;
-            this.registerButton.clicked += this.OnRegisterClicked;
+            if (this.loginButton != null)
+                this.loginButton.clicked += this.OnLoginClicked;
+
+            if (this.registerButton != null)
+                this.registerButton.clicked += this.OnRegisterClicked;
 
             this.SubscribeToAuthEvents();
+        }
+
+        // Handles standalone UIDocument usage (no UIRouter in scene).
+        protected override void Start()
+        {
+            base.Start();
+
+            // If UIRouter never called Initialize(), bind directly from UIDocument.
+            if (this.Root == null)
+            {
+                this.BindFromDocument();
+                this.SubscribeToAuthEvents();
+            }
         }
 
         protected override void OnShow()
@@ -50,10 +73,40 @@ namespace Sg01.UI
         // Called by OnShow() and by the Editor inspector button.
         public void LoadCredentialsFromAuth()
         {
+            // If fields were not bound via UIPanelBase (e.g. Panel Asset is wrong),
+            // fall back to the UIDocument on this GameObject.
+            if (this.usernameField == null)
+                this.BindFromDocument();
+
             if (this.usernameField == null || this.saiAuth == null) return;
 
             this.usernameField.SetValueWithoutNotify(this.saiAuth.GetUsername());
             this.passwordField.SetValueWithoutNotify(this.saiAuth.GetPassword());
+        }
+
+        // Binds fields directly from the UIDocument's visual tree.
+        private void BindFromDocument()
+        {
+            if (this.uiDocument == null) return;
+
+            VisualElement docRoot = this.uiDocument.rootVisualElement;
+            if (docRoot == null) return;
+
+            this.usernameField  = docRoot.Q<TextField>("UsernameField");
+            this.passwordField  = docRoot.Q<TextField>("PasswordField");
+            this.rememberToggle = docRoot.Q<Toggle>("RememberToggle");
+
+            if (this.loginButton == null)
+            {
+                this.loginButton    = docRoot.Q<Button>("LoginButton");
+                this.registerButton = docRoot.Q<Button>("RegisterButton");
+
+                if (this.loginButton != null)
+                    this.loginButton.clicked += this.OnLoginClicked;
+
+                if (this.registerButton != null)
+                    this.registerButton.clicked += this.OnRegisterClicked;
+            }
         }
 
         // ------------------------------------------------------------------
@@ -102,7 +155,7 @@ namespace Sg01.UI
         private void HandleLoginSuccess(LoginResponse response)
         {
             this.ShowFeedback($"Welcome, {response.user?.username}!", isError: false);
-            UIRouter.Instance?.ShowPanel("GamerProgress", addToHistory: false);
+            SceneManager.LoadScene("2-game-menu", LoadSceneMode.Single);
         }
 
         private void HandleLoginFailure(string error)

@@ -1,7 +1,66 @@
 /* Import shared design tokens */
 @import url("../Common/Variables.uss");
 
-/* Login card — fixed width */
+/* 2x scale overrides — all values from Variables.uss doubled */
 .card {
-    width: 400px;
+    width: 800px;
+    padding: 80px 72px 72px 72px;
+    border-radius: 32px;
+}
+
+.panel-title {
+    font-size: 56px;
+    margin-bottom: 56px;
+    letter-spacing: 2px;
+}
+
+.field-label {
+    font-size: 24px;
+    margin-bottom: 8px;
+    margin-top: 24px;
+}
+
+.input-field {
+    font-size: 28px;
+    padding: 16px 24px;
+    border-radius: 16px;
+}
+
+.toggle-row {
+    margin-top: 28px;
+    margin-bottom: 8px;
+}
+
+.toggle-row__checkbox {
+    margin-right: 16px;
+}
+
+.toggle-row__label {
+    font-size: 24px;
+}
+
+.btn-primary {
+    margin-top: 56px;
+    padding: 24px;
+    border-radius: 20px;
+    font-size: 30px;
+}
+
+.btn-secondary {
+    margin-top: 24px;
+    padding: 20px;
+    border-radius: 20px;
+    font-size: 28px;
+}
+
+.divider {
+    height: 2px;
+    margin-top: 48px;
+    margin-bottom: 16px;
+}
+
+.feedback {
+    font-size: 24px;
+    margin-top: 24px;
+    min-height: 36px;
 }
