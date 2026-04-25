@@ -1,0 +1,52 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements"
+         xmlns:uie="UnityEditor.UIElements"
+         xsi="http://www.w3.org/2001/XMLSchema-instance"
+         noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd"
+         editor-extension-mode="False">
+
+    <Style src="LoginPanel.uss" />
+
+    <!-- Full-screen root -->
+    <ui:VisualElement name="LoginRoot" class="panel-root">
+
+        <!-- Card container -->
+        <ui:VisualElement name="LoginCard" class="card">
+
+            <!-- Logo / title -->
+            <ui:Label name="TitleLabel" text="Welcome Back" class="panel-title" />
+
+            <!-- Username / Email -->
+            <ui:Label text="Username or Email" class="field-label" />
+            <ui:TextField name="UsernameField"
+                          placeholder-text="Enter username or email"
+                          class="input-field" />
+
+            <!-- Password -->
+            <ui:Label text="Password" class="field-label" />
+            <ui:TextField name="PasswordField"
+                          placeholder-text="Enter password"
+                          password="true"
+                          class="input-field" />
+
+            <!-- Remember me -->
+            <ui:VisualElement class="toggle-row">
+                <ui:Toggle name="RememberToggle" class="toggle-row__checkbox" />
+                <ui:Label text="Remember me" class="toggle-row__label" />
+            </ui:VisualElement>
+
+            <!-- Divider -->
+            <ui:VisualElement class="divider" />
+
+            <!-- Login button -->
+            <ui:Button name="LoginButton" text="Log In" class="btn-primary" />
+
+            <!-- Register button -->
+            <ui:Button name="RegisterButton" text="Create an account" class="btn-secondary" />
+
+            <!-- Feedback message -->
+            <ui:Label name="MessageLabel" text="" class="feedback" />
+
+        </ui:VisualElement>
+    </ui:VisualElement>
+
+</ui:UXML>
